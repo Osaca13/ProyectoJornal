@@ -1,0 +1,46 @@
+﻿@page "/general"
+
+    <AuthorizeView>
+        <Authorized>
+            <div class="top-row px-4">
+
+                <h1>Hello @context.User.Identity.Name!!</h1>
+
+                <p>Welcome to your new app.</p>
+
+                <SurveyPrompt Title="How is Odalys working for you?" />
+            </div>
+        </Authorized>
+    </AuthorizeView>
+
+    @*<NotAuthorized>
+                <section class="container">
+                    <div class="jumbotron container">
+                        <div class="card-body">
+                            <div class="card-img">
+                                <img src="/images/farm-land-152-205852.png" class="img-fluid" />
+                            </div>
+                            <div class="card-footer">
+                                <p>Welcome to your new app.</p>
+
+                                <SurveyPrompt Title="How is Odalys working for you?" />
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </section>
+
+            </NotAuthorized>
+            <Authorizing>
+                <h1>Loading ...</h1>
+            </Authorizing>
+        </AuthorizeView>*@
+
+    @code
+{
+        @*@context.User.Identity.Name*@
+    }

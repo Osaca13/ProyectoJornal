@@ -1,0 +1,95 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager navigationManager
+@inject IdentityAuthenticationStateProvider authStateProvider
+
+
+<div class="sidebar">
+    <NavMenu />
+</div>
+
+<div class="main">
+    <div class="top-row px-4">
+        <h1>Bienvenidos</h1>
+        @if (auth)
+        {
+            <h3>Hola @AuthenticationState.Result.User.Identity.Name!!</h3>
+            <button type="button" class="btn btn-link ml-md-auto" @onclick="@LogoutClick">Logout</button>
+
+
+        }
+        else
+        {
+            <button type="button" class="btn btn-info ml-md-auto" @onclick="@LoginClick">Candidatos</button>
+            <button type="button" class="btn btn-info ml-md-auto" @onclick="@LoginClick">Empresas</button>
+
+        }
+
+    </div> 
+
+    <div class="content px-4">
+        @Body
+    </div>
+</div>
+
+
+@functions{
+
+    [CascadingParameter]
+    Task<AuthenticationState> AuthenticationState { get; set; }
+
+    bool auth { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        authStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+
+        return base.OnInitializedAsync();
+    }
+
+    async Task LoginClick()
+    {
+        if (!(await AuthenticationState).User.Identity.IsAuthenticated)
+        {
+            navigationManager.NavigateTo("/login");
+        }
+
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var authe = await AuthenticationState;
+
+        if (authe.User.Identity.IsAuthenticated)
+        {
+            auth = true;
+            navigationManager.NavigateTo("/general");
+
+        }
+        else
+        {
+            auth = false;
+            navigationManager.NavigateTo("/");
+
+        }
+    }
+
+    async Task LogoutClick()
+    {
+
+        await authStateProvider.Logout();
+        auth = false;
+        this.StateHasChanged();
+
+
+        navigationManager.NavigateTo("/");
+
+
+    }
+
+    protected void OnAuthenticationStateChanged(Task<AuthenticationState> task)
+    {
+        AuthenticationState = task;
+        
+
+    }
+}
